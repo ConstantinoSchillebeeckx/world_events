@@ -4,7 +4,7 @@
 // https://www.d3indepth.com/geographic/
 // https://github.com/simonepri/geo-maps
 // https://geojson-maps.ash.ms/
-// https://geojson.io/
+// https://geojson.io/ -> if exportin geojson, need to use tool like https://github.com/tyrasd/rfc7946-to-d3 to "rewind"
 
 const margin = {
     top: 30,
@@ -15,20 +15,12 @@ const margin = {
   width = 1200 - margin.left - margin.right,
   height = 600 - margin.top - margin.bottom;
 
-var poly = [
-  [
-    [0, 25 * 20],
-    [8.5 * 20, 23.4 * 20],
-    [13 * 20, 21 * 20],
-    [19 * 20, 15.5 * 20]
-  ]
-];
 
 // draw the map
 // d3.json('https://gist.githubusercontent.com/olemi/d4fb825df71c2939405e0017e360cd73/raw/d6f9f0e9e8bd33183454250bd8b808953869edd2/world-110m2.json')
 // d3.json('https://gist.githubusercontent.com/d3indepth/f28e1c3a99ea6d84986f35ac8646fac7/raw/c58cede8dab4673c91a3db702d50f7447b373d98/ne_110m_land.json')
 // d3.json('map.geo.json')
-d3.json('custom.geo.json')
+d3.json('custom.geo.json') // taken from https://geojson-maps.ash.ms/
   .then(function(map) {
     render(map);
   })
@@ -70,42 +62,62 @@ function render(map) {
     .enter()
     .append("path")
     .attr("d", path)
+    .attr("class", "map")
     .style('fill', '#aaa')
     .style("stroke", "#333")
 
-  var custom_shape = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-67.1484375,-5.615985819155327],[-71.015625,-20.2209657795223],[-54.66796875,-30.145127183376115],[-43.9453125,-33.35806161277886],[-27.59765625,-16.720385051693988],[-32.6953125,-5.0909441750333855],[-67.1484375,-5.615985819155327]]]}}]}
-  console.log(custom_shape)
+  // https://geojson.io/ -> if exportin geojson, need to use tool like https://github.com/tyrasd/rfc7946-to-d3 to "rewind"
+  var custom_shape = {
+    "type": "FeatureCollection",
+    "features": [{
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-52.64648437499999, -9.188870084473393],
+            [-41.220703125, 0.8788717828324276],
+            [-28.30078125, -13.068776734357694],
+            [-31.81640625, -26.35249785815401],
+            [-59.58984374999999, -29.382175075145277],
+            [-48.603515625, -17.811456088564473],
+            [-64.599609375, -15.368949896534705],
+            [-62.75390625, -7.536764322084078],
+            [-52.64648437499999, -9.188870084473393]
+          ]
+        ]
+      }
+    }]
+  }
 
-  g.selectAll("path")
-    // .data(topojson.feature(map, map.objects.countries).features)
-    // .data(map.features)
-    // .data(map.geometries)
-    .data(custom_shape.features)
-    .enter()
-    .append("path")
-    .attr("d", path)
-    .style('fill', 'red')
-    // .style("stroke", "#333")
-
-
-  // bbox = path.bounds(map.features[0])
-
-  g.selectAll("polygon")
-    .data(poly)
-    .enter()
-    .append("polygon")
-    .attr("points", function(d) {
-      return d.map(function(d) {
-        return [d[0], d[1]].join(",");
-      }).join(" ");
-    })
-    .attr('stroke', 'black')
-    .attr('fill', '#69a3b2');
-
-  foo = polygonClipping.intersection(
+  overlap = polygonClipping.intersection(
     map.features[0].geometry.coordinates,
     custom_shape.features[0].geometry.coordinates
   )
 
-  console.log(foo)
+  overlap_geo = {
+    type: "Feature",
+    geometry: {
+      type: "Polygon",
+      coordinates: overlap[0]
+    }
+  }
+
+  // select with class name so it actually enters; otherwise it won't since the map above exists already
+  g.selectAll("path.custom")
+    .data([turf.rewind(overlap_geo, {
+      reverse: true,
+      mutate: true
+    })])
+    .enter()
+    .append("path")
+    .attr("class", "custom")
+    .attr("d", path)
+    .style('fill', 'blue')
+
+
+  // bbox = path.bounds(map.features[0])
+
+
 }
