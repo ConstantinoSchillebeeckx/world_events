@@ -6,18 +6,37 @@
   <title>World Events</title>
   <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
   <!-- <link href="node_modules/materialize-css/bin/materialize.css" rel="stylesheet" type="text/css" media="screen"/> -->
+  <!-- <link href="node_modules/nouislider/dist/nouislider.css" rel="stylesheet"> -->
+  <link
+  rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+  integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+  crossorigin="anonymous"
+/>
   <link href="plot.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
 
-  <div class="container" id="viz"></div>
+  <div class="container">
+    <button type="button" class="btn btn-primary" onclick="triggerTransition()">Trigger transition</button>
 
-  <script src="https://d3js.org/d3.v6.min.js"></script>
-  <script src="https://d3js.org/topojson.v1.min.js"></script>
-  <script src="polygon-clipping.umd.min.js"></script>
+    <div id="viz"></div>
+    <div class="row align-items-center">
+      <div class="col-sm-2"><p id="value-time"></p></div>
+      <div class="col-sm"><div id="slider-time"></div></div>
+    </div>
+  </div>
+
+  <script src="node_modules/d3/dist/d3.min.js"></script>
+  <script src="node_modules/topojson-client/dist/topojson-client.min.js"></script>
+  <script src="node_modules/polygon-clipping/dist/polygon-clipping.umd.min.js"></script>
   <script src="turf.min.js" charset="utf-8"></script>
+  <!-- <script src="node_modules/nouislider/dist/nouislider.min.js" charset="utf-8"></script> -->
+  <script src="https://unpkg.com/d3-simple-slider"></script>
   <script src="plot.js"></script>
+  <script src="slider.js"></script>
+
 
 </body>
 

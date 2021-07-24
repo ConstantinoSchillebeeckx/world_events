@@ -18,12 +18,18 @@ const margin = {
 
 // draw the map
 // d3.json('https://gist.githubusercontent.com/olemi/d4fb825df71c2939405e0017e360cd73/raw/d6f9f0e9e8bd33183454250bd8b808953869edd2/world-110m2.json')
-// d3.json('https://gist.githubusercontent.com/d3indepth/f28e1c3a99ea6d84986f35ac8646fac7/raw/c58cede8dab4673c91a3db702d50f7447b373d98/ne_110m_land.json')
+//d3.json('https://gist.githubusercontent.com/d3indepth/f28e1c3a99ea6d84986f35ac8646fac7/raw/c58cede8dab4673c91a3db702d50f7447b373d98/ne_110m_land.json')
 // d3.json('map.geo.json')
-d3.json('custom.geo.json') // taken from https://geojson-maps.ash.ms/
+// d3.json('custom.geo.json') // taken from https://geojson-maps.ash.ms/
+d3.json('earth-coastlines-10km.geo.json') // https://github.com/simonepri/geo-maps
   .then(function(map) {
     render(map);
   })
+
+
+function triggerTransition() {
+  console.log('here')
+}
 
 /**
  * Render map
@@ -58,13 +64,16 @@ function render(map) {
     // .data(topojson.feature(map, map.objects.countries).features)
     // .data(map.features)
     // .data(map.geometries)
-    .data(map.features)
+    //.data(map.features)
+    .data(map.geometries)
     .enter()
     .append("path")
     .attr("d", path)
     .attr("class", "map")
-    .style('fill', '#aaa')
+    .style('fill', 'white')
     .style("stroke", "#333")
+    .attr("vector-effect", "non-scaling-stroke")
+
 
   // https://geojson.io/ -> if exportin geojson, need to use tool like https://github.com/tyrasd/rfc7946-to-d3 to "rewind"
   var custom_shape = {
@@ -91,8 +100,9 @@ function render(map) {
     }]
   }
 
+  // TODO this is probably really slow
   overlap = polygonClipping.intersection(
-    map.features[0].geometry.coordinates,
+    map.geometries[0].coordinates,
     custom_shape.features[0].geometry.coordinates
   )
 
@@ -104,7 +114,7 @@ function render(map) {
     }
   }
 
-  // select with class name so it actually enters; otherwise it won't since the map above exists already
+  // select with class name so it actually enters; otherwise it won't since the path map above exists already
   g.selectAll("path.custom")
     .data([turf.rewind(overlap_geo, {
       reverse: true,
@@ -115,7 +125,6 @@ function render(map) {
     .attr("class", "custom")
     .attr("d", path)
     .style('fill', 'blue')
-
 
   // bbox = path.bounds(map.features[0])
 
