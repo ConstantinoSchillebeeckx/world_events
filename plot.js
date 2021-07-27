@@ -127,6 +127,8 @@ function render(map) {
     .style('fill', 'blue')
 
   // bbox = path.bounds(map.features[0])
+  //
+  console.log(data_from_db)
 
 
 }
