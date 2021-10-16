@@ -21,9 +21,9 @@ const margin = {
 //d3.json('https://gist.githubusercontent.com/d3indepth/f28e1c3a99ea6d84986f35ac8646fac7/raw/c58cede8dab4673c91a3db702d50f7447b373d98/ne_110m_land.json')
 // d3.json('map.geo.json')
 // d3.json('custom.geo.json') // taken from https://geojson-maps.ash.ms/
-d3.json('earth-coastlines-10km.geo.json') // https://github.com/simonepri/geo-maps
+d3.json('app/data/earth-coastlines-10km.geo.json') // https://github.com/simonepri/geo-maps
   .then(function(map) {
-    render(map);
+    render_map(map);
   })
 
 
@@ -35,9 +35,12 @@ function triggerTransition() {
  * Render map
  * @param {object} map topojson map object
  */
-function render(map) {
+function render_map(map) {
   console.log(map)
 
+  /*
+   * Render world map
+   */
   const projection = d3.geoMercator()
     .center([0, 30])
     .scale(200)
@@ -74,61 +77,49 @@ function render(map) {
     .style("stroke", "#333")
     .attr("vector-effect", "non-scaling-stroke")
 
+  console.log(data_from_db)
 
-  // https://geojson.io/ -> if exportin geojson, need to use tool like https://github.com/tyrasd/rfc7946-to-d3 to "rewind"
-  var custom_shape = {
-    "type": "FeatureCollection",
-    "features": [{
-      "type": "Feature",
-      "properties": {},
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [-52.64648437499999, -9.188870084473393],
-            [-41.220703125, 0.8788717828324276],
-            [-28.30078125, -13.068776734357694],
-            [-31.81640625, -26.35249785815401],
-            [-59.58984374999999, -29.382175075145277],
-            [-48.603515625, -17.811456088564473],
-            [-64.599609375, -15.368949896534705],
-            [-62.75390625, -7.536764322084078],
-            [-52.64648437499999, -9.188870084473393]
-          ]
-        ]
-      }
-    }]
-  }
-
-  // TODO this is probably really slow
-  overlap = polygonClipping.intersection(
-    map.geometries[0].coordinates,
-    custom_shape.features[0].geometry.coordinates
-  )
+  /*
+   * Render polygons
+   */
 
   overlap_geo = {
     type: "Feature",
     geometry: {
       type: "Polygon",
-      coordinates: overlap[0]
+      coordinates: data_from_db.overlap[0]
     }
   }
 
   // select with class name so it actually enters; otherwise it won't since the path map above exists already
-  g.selectAll("path.custom")
+  g.selectAll("path.polys")
     .data([turf.rewind(overlap_geo, {
       reverse: true,
       mutate: true
     })])
     .enter()
     .append("path")
-    .attr("class", "custom")
+    .attr("class", "polys")
     .attr("d", path)
     .style('fill', 'blue')
 
-  // bbox = path.bounds(map.features[0])
-  //
-  console.log(data_from_db)
+  /*
+   * Render points
+   */
 
+  pt = data_from_db.point_events[0].coordinates
+
+  g.selectAll("circle.pts")
+    .data([pt]).enter()
+    .append("circle")
+    .attr("class", "pts")
+    .attr("cx", function(d) {
+      return projection(d)[0];
+    })
+    .attr("cy", function(d) {
+      return projection(d)[1];
+    })
+    .attr("r", "2px")
+    .attr("fill", "red")
 
 }

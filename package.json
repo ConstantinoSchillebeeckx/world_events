@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@turf/rewind": "^6.5.0",
     "d3": "^7.0.0",
     "nouislider": "^15.2.0",
     "polygon-clipping": "^0.15.3",
