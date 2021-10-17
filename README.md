@@ -4,8 +4,9 @@
 ## Setup
 
 1. install node: `brew install node`
-2. run a local http server (to get around [loading local JSON](https://stackoverflow.com/a/17223621/1153897)) `python -m http.server`
-3. open page at [http://localhost:8000/](http://localhost:8000/)
+2. install packages: `npm install`
+3. run a local http server (to get around [loading local JSON](https://stackoverflow.com/a/17223621/1153897)) `python -m http.server`
+4. open page at [http://localhost:8000/](http://localhost:8000/)
 
 
 ## Getting overlapping shapes

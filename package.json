@@ -1,11 +1,7 @@
 {
   "dependencies": {
-    "@turf/rewind": "^6.5.0",
     "d3": "^7.0.0",
-    "nouislider": "^15.2.0",
-    "polygon-clipping": "^0.15.3",
-    "rfc7946-to-d3": "^1.0.1",
-    "topojson-simplify": "^3.0.3",
-    "turf": "^3.0.14"
+    "d3-tile": "^1.0.0",
+    "topojson": "^3.0.2"
   }
 }

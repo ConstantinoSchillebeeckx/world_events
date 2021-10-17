@@ -1,42 +1,27 @@
 <!DOCTYPE html>
+
 <html>
 
 <head lang="en">
   <meta charset="UTF-8">
   <title>World Events</title>
-  <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
-  <!-- <link href="node_modules/materialize-css/bin/materialize.css" rel="stylesheet" type="text/css" media="screen"/> -->
-  <!-- <link href="node_modules/nouislider/dist/nouislider.css" rel="stylesheet"> -->
+
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
   <link href="app/plot.css" rel="stylesheet" type="text/css" />
+
 </head>
 
 <body>
 
-  <div class="container">
-    <button type="button" class="btn btn-primary" onclick="triggerTransition()">Trigger transition</button>
-
-    <div id="viz"></div>
-    <div class="row align-items-center">
-      <div class="col-sm-2">
-        <p id="value-time"></p>
-      </div>
-      <div class="col-sm">
-        <div id="slider-time"></div>
-      </div>
-    </div>
-  </div>
+  <div id="map" style="height: 600px"></div>
+  <button type="button" class="btn btn-primary" onclick="triggerTransition()">click</button>
 
   <script src="node_modules/d3/dist/d3.min.js"></script>
-  <script src="node_modules/topojson-client/dist/topojson-client.min.js"></script>
-  <script src="node_modules/polygon-clipping/dist/polygon-clipping.umd.min.js"></script>
-  <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
-  <!-- <script src="node_modules/nouislider/dist/nouislider.min.js" charset="utf-8"></script> -->
-  <script src="https://unpkg.com/d3-simple-slider"></script>
-  <script src="app/data.js"></script>
+  <script src="node_modules/d3-tile/dist/d3-tile.min.js"></script>
+  <script src="node_modules/topojson/dist/topojson.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
   <script src="app/plot.js"></script>
-  <script src="app/slider.js"></script>
-
 
 </body>
 
