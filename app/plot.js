@@ -24,7 +24,14 @@ var svg = d3.select("#map")
   .append("svg")
   .attr("viewBox", [0, 0, width + margin.left + margin.right, height + margin.top + margin.bottom]);
 
+
+// this projection gets scaled and translated??
 const projection = d3.geoMercator()
+  .scale(1 / (2 * Math.PI))
+  .translate([0, 0]);
+
+// original, unchanging projection
+const projectionFixed = d3.geoMercator()
   .scale(1 / (2 * Math.PI))
   .translate([0, 0]);
 
@@ -70,15 +77,12 @@ function render_map(topology) {
   pt = data_from_db.point_events[0].coordinates
 
   var points = g.selectAll("circle.pts")
-    .data([pt]).enter()
+    .data(data_from_db.point_events).enter()
     .append("circle")
     .attr("class", "pts")
-    .attr("cx", function(d) {
-      return projection(d)[0];
-    })
-    .attr("cy", function(d) {
-      return projection(d)[1];
-    })
+    .attr("id", d => d.id)
+    .attr("cx", d => projection(d.coordinates)[0])
+    .attr("cy", d => projection(d.coordinates)[1])
 
   const zoom = d3.zoom()
     .scaleExtent([1 << 10, 1 << 15])
@@ -141,4 +145,12 @@ function url(x, y, z, style = 'stamen') {
 function triggerTransition() {
   counter++
   console.log('here', counter)
+  go_to_coords = [-90, 40]
+  d3.select("#foobar")
+    .transition()
+    .duration(1000)
+    .attr("cx", projectionFixed(go_to_coords)[0])
+    .attr("cy", projectionFixed(go_to_coords)[1])
+  //.attr("transform", "")
+
 }
